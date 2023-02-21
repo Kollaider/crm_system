@@ -5,6 +5,7 @@ from django_countries.fields import CountryField
 
 class CreateTimeMixin(models.Model):
     """Mixin for adding create_at field into model"""
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -13,6 +14,7 @@ class CreateTimeMixin(models.Model):
 
 class UpdateTimeMixin(models.Model):
     """Mixin for adding updated_at field into model"""
+
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -21,6 +23,7 @@ class UpdateTimeMixin(models.Model):
 
 class Company(CreateTimeMixin, UpdateTimeMixin, models.Model):
     """Company Model"""
+
     name = models.CharField(max_length=50)
     logo = models.ImageField(upload_to='company_logos', )
     scope = models.ForeignKey('Scope', on_delete=models.SET_NULL, null=True, blank=True)
@@ -36,6 +39,7 @@ class Company(CreateTimeMixin, UpdateTimeMixin, models.Model):
 
 class Scope(CreateTimeMixin, models.Model):
     """Scope model"""
+
     name = models.CharField(max_length=30)
 
     def __str__(self):
@@ -48,6 +52,7 @@ class Scope(CreateTimeMixin, models.Model):
 
 class Office(CreateTimeMixin, UpdateTimeMixin, models.Model):
     """Office model"""
+
     name = models.CharField(max_length=30)
     address = models.CharField(max_length=100)
     company = models.ForeignKey('Company', on_delete=models.CASCADE, related_name='offices')
@@ -62,6 +67,7 @@ class Office(CreateTimeMixin, UpdateTimeMixin, models.Model):
 
 class Profile(CreateTimeMixin, models.Model):
     """Profile model"""
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     address = models.CharField(max_length=100)
     birthdate = models.DateField()
@@ -78,6 +84,7 @@ class Profile(CreateTimeMixin, models.Model):
 
 class Position(CreateTimeMixin, models.Model):
     """Position model"""
+
     name = models.CharField(max_length=30)
     is_remote = models.BooleanField(default=False)
     salary = models.IntegerField(blank=True, null=True)
@@ -94,6 +101,7 @@ class Position(CreateTimeMixin, models.Model):
 
 class Language(CreateTimeMixin, models.Model):
     """Language model"""
+
     A0 = 'A0'
     A1 = 'A1'
     A2 = 'A2'
