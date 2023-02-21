@@ -28,6 +28,8 @@ class Company(CreateTimeMixin, UpdateTimeMixin, models.Model):
     logo = models.ImageField(upload_to='company_logos', )
     scope = models.ForeignKey('Scope', on_delete=models.SET_NULL, null=True, blank=True)
     country = CountryField(blank_label='выберите страну', blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    partner = models.ManyToManyField('self', blank=True)
 
     def __str__(self):
         return self.name
@@ -73,6 +75,7 @@ class Profile(CreateTimeMixin, models.Model):
     birthdate = models.DateField()
     photo = models.ImageField(upload_to='user_photos', blank=True)
     languages = models.ManyToManyField('Language')
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name}'
