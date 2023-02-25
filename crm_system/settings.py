@@ -142,3 +142,5 @@ VOLUMES = {
 }
 
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+LOGIN_REDIRECT_URL = '/'
