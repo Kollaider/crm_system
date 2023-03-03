@@ -1,28 +1,40 @@
 {% extends 'webapp/base.html' %}
 {% load static %}
 
+{% block title %}Company{% endblock %}
+
 {% block content %}
-<div style="margin: 100px">
+    <div style="margin: 100px">
 
-    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="row row-cols-1 row-cols-md-2 g-4">
 
-        {% for company in companies %}
-        <div class="col">
-            <div class="card">
-                <img src="{{ company.logo.url }}" class="card-img-top company-logo" alt="...">
+            {% for company in page_objs %}
+                <div class="col">
+                    <div class="card">
+                        <img src="{{ company.logo.url }}" class="card-img-top company-logo" alt="...">
 
-                <div class="card-body">
-                    <h5 class="card-title">{{ company.name }}</h5>
-                    <p class="card-text">{{ company.country.name }}</p>
-                <a href="{% url 'company_detail' company.pk %}">Подробнее..</a>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ company.name }}</h5>
+                            <p class="card-text">{{ company.country.name }}</p>
+                            <a href="{% url 'company_detail' company.pk %}">Подробнее..</a>
+                        </div>
+
+                    </div>
                 </div>
+            {% endfor %}
 
-            </div>
+
         </div>
-        {% endfor %}
+        <div class="col-12">
+            {% for page in page_objs.paginator.page_range %}
 
+                {% if page == page_objs.number %}
+                    <a href="?page={{ page }}#my-heading" class="p-3" style="color:black">{{ page }}</a>
+                {% else %}
+                    <a href="?page={{ page }}#my-heading" class="p-3">{{ page }}</a>
+                {% endif %}
 
+            {% endfor %}
+        </div>
     </div>
-
-</div>
 {% endblock %}
