@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.html import format_html
 from django_countries.fields import CountryField
 
 
@@ -30,6 +31,22 @@ class Company(CreateTimeMixin, UpdateTimeMixin, models.Model):
     country = CountryField(blank_label='выберите страну', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     partner = models.ManyToManyField('self', blank=True)
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('company_detail', kwargs={'pk': self.pk})
+
+    def logo_tag(self):
+        return format_html(f'<img src="{self.logo.url}" style="max-height: 50px;">')
+
+    logo_tag.short_description = 'Logo'
+
+    # def url_link(self):
+    #     return f'<a href="{self.url}" target="_blank">{self.url}</a>'
+    #
+    # url_link.allow_tags = True
+    # url_link.short_description = 'URL'
+
 
     def __str__(self):
         return self.name
