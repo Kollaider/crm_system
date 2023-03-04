@@ -1,0 +1,60 @@
+{% extends 'webapp/base.html' %}
+{% load static %}
+
+{% block title %}Company Detail{% endblock %}
+
+{% block content %}
+
+    <div style="margin: 100px">
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <div>
+                    <img src="{{ company.logo.url }}" class="card-img-top company-logo-detail" alt="...">
+
+                    <div class="card-body">
+                        <h5 class="card-title">{{ company.name }}</h5>
+                        <p class="card-text">{{ company.country.name }}</p>
+                    </div>
+                    <div class="card-body">
+                        Партнеры:
+                        {% for partner in company.partner.all %}
+                            <a href="{% url 'company_detail' partner.pk %}">{{ partner.name }}</a>
+                        {% endfor %}
+                    </div>
+
+                </div>
+                Офисы:
+                <ul class="list-group">
+                    {% for office in company.offices.all %}
+                        <li class="list-group-item">
+                            <a href="#">{{ office.name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <h3>Добавить офис</h3>
+
+        {#        <form action="{% url 'company_detail' company.pk %}" method="post">#}
+        {#            {% csrf_token %}#}
+        {#            <label for="office_name">Название: </label>#}
+        {#            <input id="office_name" type="text" name="name">#}
+        {#            <label for="office_address">Аддрес: </label>#}
+        {#            <input id="office_address" type="text" name="address">#}
+        {#            <input type="submit" value="OK">#}
+        {#        </form>#}
+
+        <form action="{% url 'company_detail' company.pk %}" method="post">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+                {{ form.message.errors }}
+            </table>
+            <input type="submit" value="Submit">
+        </form>
+
+    </div>
+
+
+
+{% endblock %}

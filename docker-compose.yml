@@ -1,0 +1,29 @@
+version: '3.7'
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/usr/src/app/
+      - /vol/mediafiles:/vol/mediafiles
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+  db:
+    image: postgres:12.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - ${POSTGRES_PORT}:5432
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_NAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+volumes:
+  postgres_data:
+  mediafiles:
+    external: true

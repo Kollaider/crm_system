@@ -1,0 +1,5 @@
+[flake8]
+# параметры Flake8
+
+max-line-length = 120
+exclude = .git,__pycache__,files,venv,webapp/migrations

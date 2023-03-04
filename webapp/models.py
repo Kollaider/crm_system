@@ -1,9 +1,12 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.html import format_html
+from django_countries.fields import CountryField
 
 
 class CreateTimeMixin(models.Model):
     """Mixin for adding create_at field into model"""
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -12,6 +15,7 @@ class CreateTimeMixin(models.Model):
 
 class UpdateTimeMixin(models.Model):
     """Mixin for adding updated_at field into model"""
+
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -20,9 +24,29 @@ class UpdateTimeMixin(models.Model):
 
 class Company(CreateTimeMixin, UpdateTimeMixin, models.Model):
     """Company Model"""
+
     name = models.CharField(max_length=50)
     logo = models.ImageField(upload_to='company_logos', )
     scope = models.ForeignKey('Scope', on_delete=models.SET_NULL, null=True, blank=True)
+    country = CountryField(blank_label='выберите страну', blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    partner = models.ManyToManyField('self', blank=True)
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('company_detail', kwargs={'pk': self.pk})
+
+    def logo_tag(self):
+        return format_html(f'<img src="{self.logo.url}" style="max-height: 50px;">')
+
+    logo_tag.short_description = 'Logo'
+
+    # def url_link(self):
+    #     return f'<a href="{self.url}" target="_blank">{self.url}</a>'
+    #
+    # url_link.allow_tags = True
+    # url_link.short_description = 'URL'
+
 
     def __str__(self):
         return self.name
@@ -34,6 +58,7 @@ class Company(CreateTimeMixin, UpdateTimeMixin, models.Model):
 
 class Scope(CreateTimeMixin, models.Model):
     """Scope model"""
+
     name = models.CharField(max_length=30)
 
     def __str__(self):
@@ -46,6 +71,7 @@ class Scope(CreateTimeMixin, models.Model):
 
 class Office(CreateTimeMixin, UpdateTimeMixin, models.Model):
     """Office model"""
+
     name = models.CharField(max_length=30)
     address = models.CharField(max_length=100)
     company = models.ForeignKey('Company', on_delete=models.CASCADE, related_name='offices')
@@ -60,11 +86,13 @@ class Office(CreateTimeMixin, UpdateTimeMixin, models.Model):
 
 class Profile(CreateTimeMixin, models.Model):
     """Profile model"""
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     address = models.CharField(max_length=100)
     birthdate = models.DateField()
     photo = models.ImageField(upload_to='user_photos', blank=True)
     languages = models.ManyToManyField('Language')
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name}'
@@ -76,6 +104,7 @@ class Profile(CreateTimeMixin, models.Model):
 
 class Position(CreateTimeMixin, models.Model):
     """Position model"""
+
     name = models.CharField(max_length=30)
     is_remote = models.BooleanField(default=False)
     salary = models.IntegerField(blank=True, null=True)
@@ -92,6 +121,7 @@ class Position(CreateTimeMixin, models.Model):
 
 class Language(CreateTimeMixin, models.Model):
     """Language model"""
+
     A0 = 'A0'
     A1 = 'A1'
     A2 = 'A2'
