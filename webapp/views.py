@@ -3,19 +3,60 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator
+from django.db.models import Prefetch
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, CreateView
 from django.views.generic.edit import FormMixin
+from elasticsearch_dsl import Q
 
+from webapp.documents import CompanyDocument
 from webapp.forms import OfficeForm
 from webapp.models import Company, Office
 
 
 def index(request):
-    companies = Company.objects.all()
-    print(companies)
+    # obj = Company.objects.select_related('scope').get(pk=1).scope.name
+    # print(obj)
+
+
+    # objs = Company.objects.all()
+    # for obj in objs:
+    #     print(obj.partner.all())
+
+    # objs = Company.objects.prefetch_related('partner')
+    # for obj in objs:
+    #     print(obj.partner.all())
+
+    # objs = Company.objects.prefetch_related('partner')
+    # for obj in objs:
+    #     print(obj.partner.filter(is_active=True))
+
+    objs = Company.objects.prefetch_related(
+        Prefetch(
+            'partner',
+            queryset=Company.objects.filter(is_active=True),
+            to_attr='partner_is_active'
+        )
+    )
+    for obj in objs:
+        print(obj.partner_is_active)
+
+    context = {}
+    return render(request, 'webapp/index.html', context=context)
+
+
+def search(request):
+
+    query_param = request.GET.get('query')
+
+    # Elasticsearch
+    # result = CompanyDocument.search().query('match', name=query_param)
+    # companies = result.to_queryset()
+
+    # ORM
+    companies = Company.objects.filter(name__icontains=query_param)
     context = {'companies': companies}
     return render(request, 'webapp/index.html', context=context)
 

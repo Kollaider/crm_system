@@ -4,8 +4,27 @@
 {% block title %}Home page{% endblock %}
 
 {% block content %}
-{#    <div style="margin: 100px">#}
-    <div class="block_content">
-        <h2> Home page</h2>
+    <div style="margin: 100px">
+    <H2>Home page</H2>
+{#        <h3>Search results:</h3>#}
+{#        {% if companies %}#}
+{#            {% for company in companies %}#}
+{#                <div class="col">#}
+{#                    <div class="card">#}
+{##}
+{#                        <div class="card-body">#}
+{#                            <h5 class="card-title">{{ company.name }}</h5>#}
+{#                            <p class="card-text">{{ company.country.name }}</p>#}
+{#                            <a href="{% url 'company_detail' company.pk %}">Подробнее..</a>#}
+{#                        </div>#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{#            {% endfor %}#}
+{#        {% else %}#}
+{#            <p>Nothing found...</p>#}
+{#        {% endif %}#}
+
     </div>
+
 {% endblock %}

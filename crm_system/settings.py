@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from elasticsearch import Elasticsearch
 
 load_dotenv()
 
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'webapp',
     'django_countries',
     'debug_toolbar',
+    'django_elasticsearch_dsl',
 ]
 
 MIDDLEWARE = [
@@ -127,6 +129,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -150,3 +153,9 @@ LOGIN_REDIRECT_URL = '/'
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+ELASTICSEARCH_DSL={
+    'default': {
+        'hosts': 'localhost:9200'
+    },
+}
